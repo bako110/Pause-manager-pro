@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PageLayout from '@/components/layout/PageLayout';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { API_BASE_URL } from '../../public/environment';
- import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const [nom, setNom] = useState('');
@@ -15,51 +14,49 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [telephone, setTelephone] = useState('');
+  const [loading, setLoading] = useState(false);
 
- 
+  const navigate = useNavigate();
 
-// dans ton composant
-const navigate = useNavigate();
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, {
+        lastname: nom,
+        firstname: prenom,
+        email,
+        password,
+        phone: telephone
+      });
 
-const handleRegister = async (e) => {
-  e.preventDefault();
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth/register`, {
-      lastname: nom,
-      firstname: prenom,
-      email,
-      password,
-      phone: telephone
-    });
+      Swal.fire({
+        title: 'Inscription réussie !',
+        text: 'Vous pouvez maintenant vous connecter.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        navigate('/Login');
+      });
 
-    // Message de succès
-    Swal.fire({
-      title: 'Inscription réussie !',
-      text: 'Vous pouvez maintenant vous connecter.',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    }).then(() => {
-      navigate('/Login'); // redirection vers la page login
-    });
+      setNom('');
+      setPrenom('');
+      setEmail('');
+      setPassword('');
+      setTelephone('');
 
-    // Réinitialiser le formulaire
-    setNom('');
-    setPrenom('');
-    setEmail('');
-    setPassword('');
-    setTelephone('');
-
-    console.log('Register success:', response.data);
-  } catch (err) {
-    Swal.fire({
-      title: 'Erreur !',
-      text: err.response?.data?.message || 'Erreur lors de l\'inscription',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-};
-
+      console.log('Register success:', response.data);
+    } catch (err) {
+      Swal.fire({
+        title: 'Erreur !',
+        text: err.response?.data?.message || 'Erreur lors de l\'inscription',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <PageLayout>
@@ -82,6 +79,7 @@ const handleRegister = async (e) => {
                   className="!text-white !placeholder-gray-300 bg-transparent"
                   value={nom}
                   onChange={(e) => setNom(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="space-y-2">
@@ -93,6 +91,7 @@ const handleRegister = async (e) => {
                   className="!text-white !placeholder-gray-300 bg-transparent"
                   value={prenom}
                   onChange={(e) => setPrenom(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="space-y-2">
@@ -104,6 +103,7 @@ const handleRegister = async (e) => {
                   className="!text-white !placeholder-gray-300 bg-transparent"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="space-y-2">
@@ -115,6 +115,7 @@ const handleRegister = async (e) => {
                   className="!text-white !placeholder-gray-300 bg-transparent"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="space-y-2">
@@ -126,10 +127,23 @@ const handleRegister = async (e) => {
                   className="!text-white !placeholder-gray-300 bg-transparent"
                   value={telephone}
                   onChange={(e) => setTelephone(e.target.value)}
+                  disabled={loading}
                 />
               </div>
-              <Button type="submit" className="w-full bg-kimi-orange hover:bg-kimi-orange-hover">
-                S'inscrire
+
+              <Button 
+                type="submit" 
+                className="w-full bg-kimi-orange hover:bg-kimi-orange-hover flex items-center justify-center gap-2"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                    Envoi en cours...
+                  </>
+                ) : (
+                  "S'inscrire"
+                )}
               </Button>
             </form>
           </CardContent>

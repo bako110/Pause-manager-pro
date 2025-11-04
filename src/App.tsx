@@ -12,6 +12,7 @@ import Clients from "./pages/Clients";
 import Services from "./pages/Services";
 import Events from "./pages/Events"; // ✅ Import de la page Événements
 import NotFound from "./pages/NotFound";
+import Settings from "./pages/settings";
 
 
 const queryClient = new QueryClient();
@@ -30,7 +31,7 @@ const App = () => (
           <Route path="/clients" element={<Clients />} />
           <Route path="/services" element={<Services />} />
           <Route path="/events" element={<Events />} /> {/* ✅ Route Événements ajoutée */}
-          
+          <Route path="/settings" element={<Settings />} />
           {/* ✅ Garder le NotFound en dernier */}
           <Route path="*" element={<NotFound />} />
         </Routes>
