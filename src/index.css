@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme */
+    --background: 164 50% 34%;
+    --foreground: 0 0% 100%;
+    
+    --card: 164 32% 18%;
+    --card-foreground: 0 0% 100%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    --primary: 16 69% 60%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 164 35% 28%;
+    --secondary-foreground: 0 0% 100%;
+    
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    
+    --border: 214 32% 91%;
+    --input: 0 0% 100%; /* texte des inputs */
+    --placeholder: 215 20% 70%; /* placeholder clair */
+    --ring: 164 50% 34%;
+    
+    --radius: 0.75rem;
+  }
+ 
+  .dark {
+    /* Dark theme */
+    --background: 164 37% 16%;
+    --foreground: 255 255 255;
+ 
+    --card: 164 32% 18%;
+    --card-foreground: 255 255 255;
+ 
+    --popover: 222 47% 11%;
+    --popover-foreground: 255 255 255;
+ 
+    --primary: 16 69% 60%;
+    --primary-foreground: 255 255 255;
+ 
+    --secondary: 164 35% 28%;
+    --secondary-foreground: 255 255 255;
+ 
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+ 
+    --accent: 217 33% 17%;
+    --accent-foreground: 255 255 255;
+ 
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 255 255 255;
+ 
+    --border: 217 33% 17%;
+    --input: 255 255 255; /* texte des inputs */
+    --placeholder: 200 200 200; /* placeholder clair */
+    --ring: 213 27% 84%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html, body {
+    @apply bg-kimi-green-light text-foreground antialiased min-h-screen;
+  }
+  
+  body {
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  input, textarea {
+    color: rgb(var(--input));
+    &::placeholder {
+  color: rgb(var(--placeholder));
+}
+
+  }
+}
+
+@layer utilities {
+  .spotlight {
+    position: absolute;
+    top: -250px;
+    left: -250px;
+    height: 500px;
+    width: 500px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at center,
+      rgba(100, 108, 255, 0.8) 0%,
+      rgba(100, 108, 255, 0.0) 70%
+    );
+    pointer-events: none;
+    z-index: 10;
+    animation: none;
+  }
+  
+  .glass {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dot-pattern {
+    background-image: radial-gradient(rgba(100, 100, 100, 0.1) 1px, transparent 0);
+    background-size: 30px 30px;
+    background-position: -19px -19px;
+  }
+}

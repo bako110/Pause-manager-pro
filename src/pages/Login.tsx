@@ -1,0 +1,93 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PageLayout from '@/components/layout/PageLayout';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { API_BASE_URL } from '../../public/environment';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate(); 
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
+      localStorage.setItem('token', response.data.token);
+
+      // Message succès
+      Swal.fire({
+        title: 'Connexion réussie !',
+        text: 'Bienvenue sur la plateforme.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        navigate('/dashboard'); // redirige vers le dashboard après succès
+      });
+
+    } catch (err) {
+      Swal.fire({
+        title: 'Erreur !',
+        text: err.response?.data?.message || 'Erreur lors de la connexion',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  };
+
+  return (
+    <PageLayout>
+      <div className="flex flex-col items-center justify-center min-h-[80vh]">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center text-white">Connexion</CardTitle>
+            <CardDescription className="text-center text-gray-300">
+              Entrez vos identifiants pour accéder à votre compte
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium text-white">Email</label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="votre@email.com"
+                  className="!text-white !placeholder-gray-300 bg-transparent"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="password" className="text-sm font-medium text-white">Mot de passe</label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="!text-white !placeholder-gray-300 bg-transparent"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+              <Button type="submit" className="w-full bg-kimi-orange hover:bg-kimi-orange-hover">Se connecter</Button>
+            </form>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-2">
+            <div className="text-center text-gray-300">
+              Pas de compte ?{' '}
+              <Link to="/Register" className="text-[#D4A373] hover:underline">
+                S'inscrire
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </PageLayout>
+  );
+};
+
+export default Login;
